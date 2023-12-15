@@ -2,7 +2,7 @@ import db from "|client-extension/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
 
-export const VerifyRequest = async () => {
+const VerifyRequest = async () => {
   const me = await db.user.current();
   if (me) redirect("/");
   return (
