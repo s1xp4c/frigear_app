@@ -8,7 +8,7 @@ interface Props extends PropsWithChildren<{}> {
   session: Session | null;
 }
 
-const Provider: React.FC<Props> = async (props) => {
+const Provider: React.FC<Props> = (props) => {
   const { session, children } = props;
   return <SessionProvider session={session}>{children}</SessionProvider>;
 };
