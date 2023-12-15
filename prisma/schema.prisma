@@ -12,44 +12,36 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(uuid())
+  id           String        @id @default(cuid())
   name         String        @db.VarChar(255)
   email        String        @unique @db.VarChar(255)
   emailVerified DateTime?    @map("email_verified")
   username     String        @unique @db.VarChar(255)
-  phone        Int?          @unique
+  phone        Int           @unique
   zipCode      Int?          @map("zip_code")
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   sessions     Session[]
-  verificationTokens VerificationToken[]
 
   @@map("users")
 }
 
 model Session {
-  id          String        @id @default(uuid())
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
-  expiresAt   DateTime      @map("expires_at")
+  id          String        @id @default(cuid())
   sessionToken String       @unique @map("session_token")
-  handle      String        @unique
-  userId      String?       @map("user_id")
-  user        User?         @relation(fields: [userId], references: [id])
+  expiresAt   DateTime      @map("expires_at")
+  userId      String        @map("user_id")
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
 
 model VerificationToken {
-  id          String       @id @default(uuid())
+  identifier  String
   token       String       @unique
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
   expiresAt   DateTime     @map("expires_at")
-  handle      String       @unique
-  userId      String?      @map("user_id")
-  user        User?        @relation(fields: [userId], references: [id])
 
+  @@unique([identifier, token])
   @@map("verification_tokens")
 }
 
